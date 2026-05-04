@@ -9,6 +9,7 @@ from typing import Optional
 from datetime import datetime, timedelta
 import pytz
 from fastapi import FastAPI, Depends, HTTPException
+from db import get_db, engine
 
 def get_users(db: Session):
     return db.query(User).all()
@@ -64,7 +65,7 @@ ALGORITHM = 'HS256'
 password_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
-def get_current_user(db: Session, token: str = Depends(oauth2_scheme)):
+def get_current_user( db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     token_data = verify_token(token)
     user = db.query(User).filter(User.email == token_data.email).first()
     if user is None:

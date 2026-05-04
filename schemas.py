@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class BookBase(BaseModel):
     title: str
@@ -18,17 +18,19 @@ class Book(BookBase):
         from_attribute = True
 # - - - - - - - - - - - - - - 
 class UserBase(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     name: str
     email: str
     role: str
+    hash_pwd: str
     is_active: bool
 
 class UserCreate(UserBase):
     name: str
     email: str
     role: str
-    password: str
+    hash_pwd: str
 
 class UserResponse(UserBase):
     id: int
@@ -42,7 +44,7 @@ class UserResponse(UserBase):
 
 class UserLogin(BaseModel):
     email: str
-    password: str
+    hash_pwd: str
 
 class Token(BaseModel):
     access_token: str

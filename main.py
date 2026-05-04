@@ -28,8 +28,8 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     """Create new user account"""
     if services.get_user_by_email(db,user.email) is not None:
         raise HTTPException(status_code=400, detail="User Email account exists!")
-    hashed_password = services.get_pwd_hash(user.password)
-    user.password = hashed_password
+    hashed_password = services.get_pwd_hash(user.hash_pwd)
+    user.hash_pwd = hashed_password
     return services.create_new_user_accnt(db,user)
 
 @app.post('/token', response_model=schemas.Token)
